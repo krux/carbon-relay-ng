@@ -11,8 +11,11 @@ import (
 
 var bufio_buffer_size = 2000000 // in bytes. 4096 is go default
 
-// to make sure writes to In are fast until we really can't keep up
-var conn_in_buffer = 30000 // in metrics. (each metric line is typically about 70 bytes)
+// krux change from default 30000; we need a large enough buffer for metrics comming in
+// so that the app doesn't hang while processing & sending
+// 200,000 is too low for 1.5M metrics / min; 1,000,000 works; bumping the number up a bit
+// for growth; no negative performance impacts observable 
+var conn_in_buffer = 1500000 // in metrics. (each metric line is typically about 70 bytes)
 
 var keepsafe_initial_cap = 100000 // not very important
 
