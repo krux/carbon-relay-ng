@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/graphite-ng/carbon-relay-ng/_third_party/github.com/Dieterbe/go-metrics"
+	"github.com/Dieterbe/go-metrics"
 	"io"
 	"net"
 	"os"
@@ -44,12 +44,12 @@ type Conn struct {
 	numErrTruncated   metrics.Counter
 	numErrWrite       metrics.Counter
 	numErrFlush       metrics.Counter
-	numOut            metrics.Counter
+	numOut            metrics.Counter // metrics successfully written to our buffered conn (no flushing yet)
 	durationWrite     metrics.Timer
-	durationTickFlush metrics.Timer
-	durationManuFlush metrics.Timer
-	tickFlushSize     metrics.Histogram
-	manuFlushSize     metrics.Histogram
+	durationTickFlush metrics.Timer     // only updated after successfull flush
+	durationManuFlush metrics.Timer     // only updated after successfull flush
+	tickFlushSize     metrics.Histogram // only updated after successfull flush. in bytes
+	manuFlushSize     metrics.Histogram // only updated after successfull flush. in bytes
 	numBuffered       metrics.Gauge
 	numDropBadPickle  metrics.Counter
 }

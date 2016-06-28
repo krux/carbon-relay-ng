@@ -20,7 +20,7 @@ Or balance/split load, or provide redundancy, or partition the data, etc.
 This pattern allows alerting and event processing systems to act on the data as it is received (which is much better than repeated reading from your storage)
 
 
-![screenshot](https://raw.githubusercontent.com/graphite-ng/carbon-relay-ng/master/screenshot.png)
+![screenshot](https://raw.githubusercontent.com/graphite-ng/carbon-relay-ng/master/screenshots/screenshot.png)
 
 
 Future work aka what's missing
@@ -43,14 +43,14 @@ Instrumentation
 * You can also send metrics to graphite (or feed back into the relay), see config.
 * Comes with a [grafana dashboard template](https://github.com/graphite-ng/carbon-relay-ng/blob/master/grafana-dashboard.json) so you get up and running in no time.
 
-![grafana dashboard](https://raw.githubusercontent.com/graphite-ng/carbon-relay-ng/master/grafana-screenshot.png)
+![grafana dashboard](https://raw.githubusercontent.com/graphite-ng/carbon-relay-ng/master/screenshots/grafana-screenshot.png)
 
 
 Building
 --------
 
 Requires Go 1.4 or higher.
-we use https://github.com/mjibson/party to manage vendoring 3rd party libraries
+We use https://github.com/kardianos/govendor to manage vendoring 3rd party libraries
 
     export GOPATH=/some/path/
     export PATH="$PATH:$GOPATH/bin"
@@ -78,6 +78,7 @@ Concepts
 You have 1 master routing table.  This table contains 0-N routes.  Each route can contain 0-M destinations (tcp endpoints)
 
 First: "matching": you can match metrics on one or more of: prefix, substring, or regex.  All 3 default to "" (empty string, i.e. allow all).
+Note that the matching is applied to the entire metric line (including key, value and timestamp).
 The conditions are AND-ed.  Regexes are more resource intensive and hence should, and often can be avoided.
 
 * All incoming matrics are validated, filtered through the blacklist and then go into the table.
@@ -124,6 +125,8 @@ If we detect the metric is in metrics2.0 format we also check proper formatting,
 
 Invalid metrics are dropped and can be seen at /badMetrics/timespec.json where timespec is something like 30s, 10m, 24h, etc.
 (the counters are also exported.  See instrumentation section)
+
+You can also validate that for each series, each point is older than the previous. using the validate_order option.  This is helpful for some backends like grafana.net
 
 
 Aggregation
@@ -211,3 +214,4 @@ commands:
                    sub=<str>                     new matcher substring
                    regex=<regex>                 new matcher regex
 
+    delRoute <routeKey>                          delete given route

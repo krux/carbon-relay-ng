@@ -5,11 +5,12 @@ package main
 
 import (
 	"fmt"
-	logging "github.com/graphite-ng/carbon-relay-ng/_third_party/github.com/op/go-logging"
 	"os"
 	"sync"
 	"testing"
 	"time"
+
+	logging "github.com/op/go-logging"
 )
 
 var packets0A *dummyPackets
@@ -203,6 +204,7 @@ func test3RangesWith2EndpointAndSpoolInMiddle(t *testing.T, reconnMs, flushMs in
 	tUDU.Close()
 
 	table.ShutdownOrFatal(t)
+	os.RemoveAll(spoolDir)
 }
 
 func Test2EndpointsUp(t *testing.T) {
@@ -287,6 +289,7 @@ func test2Endpoints(t *testing.T, reconnMs, flushMs int, dp *dummyPackets) {
 	t2.Close()
 
 	table.ShutdownOrFatal(t)
+	os.RemoveAll(spoolDir)
 }
 
 func TestConsistentHashing(t *testing.T) {
